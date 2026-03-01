@@ -1,0 +1,34 @@
+name: Daily Commit Workflow
+
+on:
+  schedule:
+    # Runs at 12:30 PM UTC every day. 
+    # Must use specific numbers, no wildcards like '*' for hour/min.
+    - cron: '30 12 * * *'
+  workflow_dispatch: # This adds the "Run workflow" button for testing
+
+jobs:
+  commit-job:
+    runs-on: ubuntu-latest
+    
+    # 🚨 REQUIRED: Grant permission to push changes
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add commit for 24f2007798@ds.study.iitm.ac.in
+        run: |
+          # Create or update a file so there is a change to commit
+          echo "Automated update: $(date)" > activity_log.txt
+          
+          # Setup git credentials
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Commit and Push
+          git add activity_log.txt
+          git commit -m "Daily automated commit for 24f2007798@ds.study.iitm.ac.in"
+          git push
